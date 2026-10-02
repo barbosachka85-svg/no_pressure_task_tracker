@@ -5,9 +5,6 @@ description = "Добрый трекер задач, который не руг�
 requires-python = ">=3.10"
 dependencies = ["flet==1.0.3"]
 
-[dependency-groups]
-dev = ["flet-cli==1.0.3"]
-
 [tool.flet]
 product = "Добрый трекер"
 artifact = "kind-tracker"
