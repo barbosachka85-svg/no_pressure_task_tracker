@@ -1,10 +1,7 @@
-# Собирает APK для Android при каждом изменении в репозитории
-# и по кнопке "Run workflow" на вкладке Actions.
 name: Собрать APK
 
 on:
   push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -13,15 +10,20 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: flet-dev/flet-build-action@v1
-        id: build
+      - uses: actions/setup-python@v6
         with:
-          target: apk
-          runner-python-version: "3.13"
-          bundled-python-version: "3.13"
+          python-version: "3.13"
+
+      - name: Установить Flet и инструмент сборки
+        run: pip install "flet==1.0.3" "flet-cli==1.0.3"
+
+      - name: Собрать APK
+        env:
+          PYTHONUTF8: "1"
+        run: flet build apk --yes --no-rich-output --python-version 3.13
 
       - uses: actions/upload-artifact@v7
         with:
           name: kind-tracker-apk
-          path: ${{ steps.build.outputs.archive-path }}
-          archive: false
+          path: build/apk
+          if-no-files-found: error
