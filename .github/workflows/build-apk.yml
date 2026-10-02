@@ -1,0 +1,27 @@
+# Собирает APK для Android при каждом изменении в репозитории
+# и по кнопке "Run workflow" на вкладке Actions.
+name: Собрать APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: flet-dev/flet-build-action@v1
+        id: build
+        with:
+          target: apk
+          runner-python-version: "3.13"
+          bundled-python-version: "3.13"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: kind-tracker-apk
+          path: ${{ steps.build.outputs.archive-path }}
+          archive: false
